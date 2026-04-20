@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Analia Luraschi — Project Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg: #f4eee1;
+    --ink: #1f1a12;
+    --ink-soft: #5a4a36;
+    --muted: #9a8a74;
+    --line: #2a1f14;
+    --y1: #f5e08a;
+    --y2: #eac87a;
+    --p1: #e8b9a3;
+    --p2: #d89a9a;
+    --accent: #b8491d;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body {
+    position: relative;
+    min-height: 100vh;
+  }
+
+  /* Grain overlay */
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.18;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* Typography */
+  .display {
+    font-family: 'Instrument Serif', 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 0.92;
+  }
+
+  .mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .italic { font-style: italic; }
+
+  /* Layout */
+  .wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 56px;
+    position: relative;
+  }
+  @media (max-width: 720px) {
+    .wrap { padding: 0 24px; }
+  }
+
+  /* --- NAV --- */
+  nav.top {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(42,31,20,0.12);
+  }
+  nav.top .brand {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+  nav.top .brand em { font-style: italic; }
+  nav.top .menu {
+    display: flex;
+    gap: 28px;
+    justify-self: center;
+  }
+  nav.top .menu a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  nav.top .menu a:hover { color: var(--accent); }
+  nav.top .loc {
+    justify-self: end;
+    color: var(--ink-soft);
+  }
+
+  /* --- HERO --- */
+  .hero {
+    position: relative;
+    padding: 80px 0 120px;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: end;
+  }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 40px;
+    color: var(--ink-soft);
+  }
+
+  .hero-title {
+    font-size: clamp(72px, 14vw, 220px);
+    line-height: 0.86;
+    letter-spacing: -0.035em;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-title .line-2 {
+    padding-left: clamp(40px, 8vw, 160px);
+    display: block;
+  }
+  .hero-title em {
+    font-style: italic;
+    background: linear-gradient(95deg, var(--y1) 0%, var(--y2) 40%, var(--p1) 75%, var(--p2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-right {
+    display: grid;
+    gap: 28px;
+    align-self: end;
+    padding-bottom: 10px;
+  }
+  .hero-bio {
+    font-size: 17px;
+    line-height: 1.5;
+    max-width: 420px;
+    color: var(--ink-soft);
+  }
+  .hero-bio .accent {
+    color: var(--ink);
+    font-style: italic;
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+  }
+
+  /* Blob gradient */
+  .blob {
+    position: absolute;
+    width: 680px; height: 680px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--y1), var(--y2) 40%, var(--p1) 70%, transparent 85%);
+    filter: blur(40px);
+    opacity: 0.75;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .blob.b1 {
+    top: -120px; right: -140px;
+  }
+  .blob.b2 {
+    bottom: -200px; left: -180px;
+    background: radial-gradient(circle at 50% 50%, var(--p2), var(--p1) 50%, transparent 80%);
+    width: 540px; height: 540px;
+    opacity: 0.55;
+  }
+
+  /* scroll ticker */
+  .ticker {
+    margin-top: 80px;
+    border-top: 1px solid rgba(42,31,20,0.14);
+    border-bottom: 1px solid rgba(42,31,20,0.14);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 18px 0;
+    position: relative;
+    z-index: 2;
+    background: var(--bg);
+  }
+  .ticker-track {
+    display: inline-flex;
+    gap: 48px;
+    animation: tick 40s linear infinite;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--ink);
+  }
+  .ticker-track span.dot {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+  }
+  @keyframes tick {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* --- ABOUT --- */
+  .section {
+    padding: 140px 0;
+    position: relative;
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 32px;
+    margin-bottom: 72px;
+    align-items: start;
+  }
+  .section-head .num { color: var(--muted); padding-top: 10px; }
+  .section-head h2 {
+    font-size: clamp(44px, 6vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    max-width: 900px;
+  }
+  .section-head h2 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr;
+    gap: 32px;
+  }
+  @media (max-width: 900px) { .about-grid { grid-template-columns: 1fr; } }
+
+  .portrait {
+    grid-column: span 1;
+    aspect-ratio: 3/4;
+    border-radius: 4px;
+    background:
+      linear-gradient(135deg, rgba(247,213,96,0.35), rgba(232,138,160,0.35)),
+      repeating-linear-gradient(45deg, #e6dcc7 0 2px, #ddd0b3 2px 4px);
+    border: 1px solid rgba(42,31,20,0.15);
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 16px;
+    overflow: hidden;
+  }
+  .portrait::after {
+    content: "PORTRAIT — ANALIA";
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--ink-soft);
+    background: var(--bg);
+    padding: 4px 8px;
+    border: 1px solid rgba(42,31,20,0.2);
+  }
+  .about-col p {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  .about-col p strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .about-col .quote {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    line-height: 1.3;
+    color: var(--ink);
+    padding-left: 20px;
+    border-left: 2px solid var(--accent);
+    margin: 24px 0;
+    font-style: italic;
+  }
+
+  /* --- APPROACH (4 pillars) --- */
+  .approach {
+    background: linear-gradient(180deg, var(--bg) 0%, rgba(247,213,96,0.14) 60%, rgba(232,138,160,0.12) 100%);
+    position: relative;
+  }
+  .approach::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 900px) { .pillars { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .pillars { grid-template-columns: 1fr; } }
+
+  .pillar {
+    padding: 32px 24px 40px;
+    border-top: 1px solid rgba(42,31,20,0.18);
+    border-right: 1px solid rgba(42,31,20,0.08);
+    transition: background 0.3s ease;
+    cursor: default;
+  }
+  .pillar:last-child { border-right: none; }
+  .pillar:hover {
+    background: rgba(255,255,255,0.4);
+  }
+  .pillar .pnum {
+    color: var(--accent);
+    margin-bottom: 48px;
+  }
+  .pillar h3 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .pillar h3 em { font-style: italic; color: var(--accent); }
+  .pillar p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* --- SERVICES / WHAT I DO --- */
+  .services-list {
+    display: grid;
+    gap: 0;
+  }
+  .service-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 2fr 1fr;
+    gap: 24px;
+    padding: 28px 0;
+    border-top: 1px solid rgba(42,31,20,0.14);
+    align-items: center;
+    transition: padding 0.3s ease;
+  }
+  .service-row:last-child { border-bottom: 1px solid rgba(42,31,20,0.14); }
+  .service-row:hover { padding-left: 16px; }
+  .service-row .sn { color: var(--muted); }
+  .service-row h4 {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+  }
+  .service-row h4 em { font-style: italic; }
+  .service-row p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .service-row .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+  .service-row .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border: 1px solid rgba(42,31,20,0.3);
+    border-radius: 40px;
+  }
+  @media (max-width: 900px) {
+    .service-row { grid-template-columns: 40px 1fr; }
+    .service-row p, .service-row .tags { grid-column: 2; }
+    .service-row .tags { justify-content: flex-start; }
+  }
+
+  /* --- STATS --- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    padding: 80px 0;
+    border-top: 1px solid rgba(42,31,20,0.14);
+    border-bottom: 1px solid rgba(42,31,20,0.14);
+  }
+  @media (max-width: 700px) { .stats { grid-template-columns: 1fr 1fr; } }
+  .stat .num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 72px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    background: linear-gradient(120deg, var(--y2) 10%, var(--p1) 70%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .stat .lbl { margin-top: 12px; color: var(--ink-soft); }
+
+  /* --- TESTIMONIAL --- */
+  .quote-block {
+    padding: 120px 0;
+    text-align: center;
+    position: relative;
+  }
+  .quote-block blockquote {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(32px, 4.5vw, 56px);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .quote-block blockquote em { font-style: italic; }
+  .quote-block .attr {
+    margin-top: 40px;
+    color: var(--ink-soft);
+  }
+
+  /* --- CONTACT --- */
+  .contact {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 140px 0 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact .blob {
+    opacity: 0.55;
+    filter: blur(60px);
+  }
+  .contact .blob.c1 {
+    top: -200px; left: -100px;
+    background: radial-gradient(circle, var(--y1), var(--p1) 50%, transparent 75%);
+    width: 600px; height: 600px;
+  }
+  .contact .blob.c2 {
+    bottom: -160px; right: -140px;
+    background: radial-gradient(circle, var(--p2), var(--y2) 50%, transparent 75%);
+    width: 500px; height: 500px;
+    opacity: 0.4;
+  }
+  .contact-inner {
+    position: relative;
+    z-index: 2;
+  }
+  .contact h2 {
+    font-size: clamp(56px, 9vw, 140px);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    margin-bottom: 48px;
+  }
+  .contact h2 em {
+    font-style: italic;
+    background: linear-gradient(95deg, var(--y1), var(--p1), var(--p2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-top: 72px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(246,241,231,0.2);
+  }
+  @media (max-width: 800px) { .contact-grid { grid-template-columns: 1fr; } }
+  .contact .mono { color: rgba(246,241,231,0.55); }
+  .contact-col a {
+    display: block;
+    color: var(--bg);
+    text-decoration: none;
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    margin-top: 10px;
+    transition: color 0.3s;
+  }
+  .contact-col a:hover { color: var(--y1); }
+  .contact-col .lines {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 10px;
+    color: rgba(246,241,231,0.8);
+  }
+
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 100px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(246,241,231,0.15);
+    color: rgba(246,241,231,0.5);
+    position: relative;
+    z-index: 2;
+  }
+
+  /* CTA button */
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 28px;
+    background: var(--ink);
+    color: var(--bg);
+    text-decoration: none;
+    border-radius: 40px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(42,31,20,0.25);
+  }
+  .cta .arr {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--y1), var(--p1));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    font-size: 12px;
+  }
+  .contact .cta {
+    background: var(--bg);
+    color: var(--ink);
+  }
+</style>
+</head>
+<body>
+
+  <div class="grain"></div>
+
+  <!-- =============== NAV =============== -->
+  <div class="wrap">
+    <nav class="top">
+      <div class="brand"><em>A.</em> Luraschi</div>
+      <div class="menu mono">
+        <a href="#about">Sobre mí</a>
+        <a href="#approach">Método</a>
+        <a href="#work">Servicios</a>
+        <a href="#contact">Contacto</a>
+      </div>
+      <div class="loc mono">Buenos Aires → remoto</div>
+    </nav>
+  </div>
+
+  <!-- =============== HERO =============== -->
+  <section class="hero">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+
+    <div class="wrap">
+      <div class="hero-meta mono">
+        <span>— 001 / Presentación</span>
+        <span>Project Manager · Desde 2017</span>
+      </div>
+
+      <div class="hero-grid">
+        <h1 class="display hero-title">
+          <span class="line-1">Analia</span>
+          <span class="line-2"><em>Luraschi</em></span>
+        </h1>
+
+        <div class="hero-right">
+          <p class="hero-bio">
+            <span class="accent">Una project manager que mantiene la calma cuando los roadmaps no.</span>
+            Acompaño a equipos de producto, estudios y founders a transformar ambiciones dispersas en trabajo secuenciado — entregado a tiempo, sin dramas.
+          </p>
+          <div>
+            <a href="#contact" class="cta">
+              Agendar una llamada <span class="arr">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticker -->
+    <div class="ticker">
+      <div class="ticker-track">
+        <span>Entrega</span><span class="dot">✦</span>
+        <span><em class="italic">Operaciones</em></span><span class="dot">✦</span>
+        <span>Rituales ágiles</span><span class="dot">✦</span>
+        <span><em class="italic">Calma con stakeholders</em></span><span class="dot">✦</span>
+        <span>Roadmaps</span><span class="dot">✦</span>
+        <span><em class="italic">Disciplina de alcance</em></span><span class="dot">✦</span>
+        <!-- duplicate for seamless loop -->
+        <span>Entrega</span><span class="dot">✦</span>
+        <span><em class="italic">Operaciones</em></span><span class="dot">✦</span>
+        <span>Rituales ágiles</span><span class="dot">✦</span>
+        <span><em class="italic">Calma con stakeholders</em></span><span class="dot">✦</span>
+        <span>Roadmaps</span><span class="dot">✦</span>
+        <span><em class="italic">Disciplina de alcance</em></span><span class="dot">✦</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== ABOUT =============== -->
+  <section class="section" id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="num mono">— 002 / Sobre mí</div>
+        <h2 class="display">
+          Ocho años convirtiendo <em>briefs caóticos</em> en <em>entregas impecables</em>. Soy la maquinaria silenciosa detrás del lanzamiento.
+        </h2>
+      </div>
+
+      <div class="about-grid">
+        <div class="portrait"></div>
+
+        <div class="about-col">
+          <p>
+            <strong>Soy Analia —</strong> project manager senior con una década sentada entre ingeniería, diseño y liderazgo. Traducción, triage y muchos Gantt bien ubicados.
+          </p>
+          <p>
+            Mi recorrido es híbrido: empecé en agencias digitales haciendo malabares con doce clientes a la vez, pasé a SaaS orientado a producto y hoy trabajo con equipos que se preocupan tanto por el <em>cómo</em> como por el <em>qué</em> se construye.
+          </p>
+        </div>
+
+        <div class="about-col">
+          <div class="quote">
+            No persigo velocidad. Persigo claridad — esa que vuelve inevitable a la velocidad.
+          </div>
+          <p>
+            Certificada PMP, trilingüe (ES / EN / IT) y fan confesa de tres cosas: tickets bien escritos, dailies cortas, y el momento exacto en que un sprint efectivamente termina un viernes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== APPROACH =============== -->
+  <section class="section approach" id="approach">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="num mono">— 003 / Método</div>
+        <h2 class="display">
+          Cuatro principios que defiendo en cada <em>proyecto</em>.
+        </h2>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pnum mono">01</div>
+          <h3>Claridad <em>antes que</em> consenso</h3>
+          <p>No hace falta que todos estén de acuerdo — hace falta que todos entiendan. Lo escribo para que nadie tenga que preguntar dos veces.</p>
+        </div>
+        <div class="pillar">
+          <div class="pnum mono">02</div>
+          <h3>El alcance <em>es un</em> documento vivo</h3>
+          <p>El scope se expande. Fingir lo contrario es cómo mueren los proyectos. Negocio trade-offs cada semana, no cada trimestre.</p>
+        </div>
+        <div class="pillar">
+          <div class="pnum mono">03</div>
+          <h3>Personas <em>antes que</em> procesos</h3>
+          <p>Un buen ritual sirve al equipo. Uno malo actúa para el liderazgo. Podo con frecuencia y reemplazo con prudencia.</p>
+        </div>
+        <div class="pillar">
+          <div class="pnum mono">04</div>
+          <h3>Lanzá <em>la</em> versión aburrida</h3>
+          <p>El primer recorte siempre es más chico de lo que nadie quiere. Entregarlo compra la credibilidad para construir la versión interesante después.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== SERVICES =============== -->
+  <section class="section" id="work">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="num mono">— 004 / Servicios</div>
+        <h2 class="display">
+          Cómo podemos <em>trabajar</em> juntas.
+        </h2>
+      </div>
+
+      <div class="services-list">
+        <div class="service-row">
+          <div class="sn mono">(01)</div>
+          <h4>Delivery lead <em>embebida</em></h4>
+          <p>Me sumo a tu equipo entre 3 y 9 meses, me hago cargo de la entrega de una apuesta concreta y dejo un equipo que se sostiene solo.</p>
+          <div class="tags">
+            <span class="tag">Producto</span><span class="tag">Agile</span>
+          </div>
+        </div>
+
+        <div class="service-row">
+          <div class="sn mono">(02)</div>
+          <h4>PMO <em>fraccional</em></h4>
+          <p>Para equipos liderados por founders que necesitan una capa de orden operativo sin contratar full-time. Monto los rituales, la documentación y los reportes que sí se leen.</p>
+          <div class="tags">
+            <span class="tag">Ops</span><span class="tag">Procesos</span>
+          </div>
+        </div>
+
+        <div class="service-row">
+          <div class="sn mono">(03)</div>
+          <h4>Orquestación <em>de lanzamiento</em></h4>
+          <p>Lanzamientos multifuncionales donde marketing, ingeniería, soporte y legales tienen que coincidir el mismo martes. Yo sostengo el plan para que vos sostengas el mensaje.</p>
+          <div class="tags">
+            <span class="tag">GTM</span><span class="tag">Cross-fn</span>
+          </div>
+        </div>
+
+        <div class="service-row">
+          <div class="sn mono">(04)</div>
+          <h4>Rescate <em>de proyectos</em></h4>
+          <p>Cuando un roadmap se atascó, entro con un diagnóstico corto: encontrar el cuello de botella, cortar el ruido, reconstruir la confianza. Después vemos si me necesitás por más tiempo.</p>
+          <div class="tags">
+            <span class="tag">Turnaround</span><span class="tag">Auditoría</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== STATS =============== -->
+  <section class="wrap">
+    <div class="stats">
+      <div class="stat">
+        <div class="num">40+</div>
+        <div class="lbl mono">Proyectos entregados</div>
+      </div>
+      <div class="stat">
+        <div class="num">8 años</div>
+        <div class="lbl mono">Liderando entregas</div>
+      </div>
+      <div class="stat">
+        <div class="num">3</div>
+        <div class="lbl mono">Idiomas · ES / EN / IT</div>
+      </div>
+      <div class="stat">
+        <div class="num">94<span style="font-size:32px">%</span></div>
+        <div class="lbl mono">Lanzamientos en fecha</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============== QUOTE =============== -->
+  <section class="quote-block">
+    <div class="wrap">
+      <blockquote class="display">
+        "Analia es la persona a la que llamás cuando el proyecto <em>tiene que aterrizar</em>. Hace que la semana difícil se sienta ordinaria."
+      </blockquote>
+      <div class="attr mono">— Ex Head of Product, fintech en crecimiento</div>
+    </div>
+  </section>
+
+  <!-- =============== CONTACT =============== -->
+  <section class="contact" id="contact">
+    <div class="blob c1"></div>
+    <div class="blob c2"></div>
+    <div class="wrap contact-inner">
+      <div class="mono" style="margin-bottom: 40px; color: rgba(246,241,231,0.55)">— 005 / Hablemos</div>
+      <h2 class="display">
+        ¿Tenés un proyecto que <em>necesita una mano</em> al volante?
+      </h2>
+
+      <div style="margin-top: 24px">
+        <a href="mailto:hola@analialuraschi.com" class="cta">
+          Empezar una conversación <span class="arr">↗</span>
+        </a>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-col">
+          <div class="mono">Directo</div>
+          <a href="mailto:hola@analialuraschi.com">hola@analialuraschi.com</a>
+          <div class="lines">
+            Abierta a engagements embebidos y fraccionales. Mínimo 3 meses.
+          </div>
+        </div>
+        <div class="contact-col">
+          <div class="mono">En otros lados</div>
+          <a href="#">LinkedIn ↗</a>
+          <a href="#">Read.cv ↗</a>
+          <div class="lines">
+            Con base en Buenos Aires, trabajando en horarios de Europa y América.
+          </div>
+        </div>
+      </div>
+
+      <div class="foot mono">
+        <div>© 2026 — Analia Luraschi</div>
+        <div>Hecho con calma · no con cafeína</div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
